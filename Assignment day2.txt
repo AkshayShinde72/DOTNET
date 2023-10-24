@@ -1,0 +1,119 @@
+//Assignment 3
+
+//Q1. Accept two number from user and do the sum of it
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace ConsoleApp3
+{
+    internal class Program
+    {
+        public static void sum(int x,int y)
+        {
+            int sum = x + y;
+            Console.WriteLine("sum is = {0}" ,sum);
+        }
+        static void Main(string[] args)
+        {
+            String x, y;
+            Console.WriteLine("Enter two numbers");
+            x=Console.ReadLine();
+            y=Console.ReadLine();
+
+
+            int x1 =Convert.ToInt32(x);
+            int y1 =Convert.ToInt32(y);
+            sum(x1 ,y1);
+
+        }
+    }
+}
+
+
+/*Q2.Accept a float value and print square of that number
+Solve above code using Parse(), ToSingle() and TryPrase() method.
+Also observe exception if you do not enter valid data*/
+
+
+using System;
+using System.Collections.Generic;
+using System.Data.SqlClient;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace day2assig
+{
+    
+    internal class Program
+    {   public static void sqr(float x)
+        {
+            if(x!=0)
+             Console.WriteLine(x*x);
+            
+        }
+        static void Main(string[] args)
+        {
+            String x;
+            Console.WriteLine("Enter a number");
+            x=Console.ReadLine();
+          //  float x1=float.Parse(x);
+            float x2=Convert.ToSingle(x);
+          //  float.TryParse(x, out float x4);
+            sqr(x2);
+        }
+    }
+}
+
+
+/*
+Create a class calculator and write 3 instance method square, cube, 
+round[if in put 22.5 o/p 22]
+Which will return square .cube and rounded number.
+Create object and call method and print the result.
+
+ */
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace q3
+{
+ 
+    class Calculator
+    {
+        public void square(float x)
+        {
+            Console.WriteLine(x * x);
+        }
+
+        public void cube(float x)
+        {
+            Console.WriteLine(x * x * x);
+
+        }
+        public void rounded(float x)
+        {
+            int y = (int)x;
+            Console.WriteLine(y);
+
+        }
+    }
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            Calculator c1 = new Calculator();
+            c1.square(3.22f);
+            c1.cube(2.2f);
+            c1.rounded(2.75f);
+
+        }
+    }
+}
