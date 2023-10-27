@@ -1,0 +1,415 @@
+﻿//QUE//1efine a class “MyClass”. Define a class “Everything” and define a member function with variable no. of argument inside it. Define  a class Demo1  and define main function in it. From main function , call the function of class Everything and make sure you can pass any arguments , it will take and display. It should even take instance of “MyClass” and display.
+
+
+package exm;
+
+class MyClass
+{
+	private char ch;
+
+	public char getCh() {
+		return ch;
+	}
+
+	public void setCh(char ch) {
+		this.ch = ch;
+	}
+	
+}
+class Everything
+{
+	
+	public void disp(Object...k) 
+	{
+	
+	for (int i=0;i<k.length;i++)
+	
+	    System.out.println(k[i]);
+	}
+	
+}
+public class Demo1 {
+
+	public static void main(String[] args) 
+	{
+
+		Everything obj1=new Everything();
+		obj1.disp("jyoti",'B',4.5,8);
+		MyClass obj2=new MyClass();
+		obj2.setCh('z');
+		System.out.println(obj2.getCh());
+		
+
+	}
+
+}
+
+______________________________________________________________________________________________________________________
+
+
+//QUE 2//
+Revision_2)
+Define a class Sample with member variable “char ch” and a parameterized constructor. Create some instances(at least 2) of this class by passing any alphabet.  Now achieve following tasks:
+
+a) when you print the reference it should be display the character which was passed during instantiation.
+b) if two instances have same character or an alphabet, their "equals()" should return true and obviously "hashCode()" also should be same.
+
+
+
+
+package exm;
+import java.util.Scanner;
+
+
+
+public class Sample
+{
+	private char ch;
+	
+	
+	public Sample(char ch)
+	{
+		this.ch=ch;
+	}
+
+	public String toString()
+	{
+		return  "["+ch+"]";
+	}
+	
+	public boolean equals(Object ref)
+	{
+		Sample ob=(Sample)ref;
+		return ch==ob.ch;
+		
+	}
+	/*public int hashCode()
+	{
+		return ch;
+	}*/
+
+	public static void main(String args[])
+	{
+		System.out.println("enter any two characters");
+		Scanner sc=new Scanner(System.in);
+		char ch=sc.next().charAt(0);
+		char ch1=sc.next().charAt(0);
+		
+		Sample s1=new Sample(ch);
+		//Sample s2=new Sample(ch1);
+		Sample s2=s1;
+		
+		System.out.println(s1);
+		System.out.println(s2);
+		
+		if(s1.equals(s2)) 
+		{
+			System.out.println("s1 and s2 are equals");
+		}
+		else
+		{
+			System.out.println("s1 and s2 are not equals");
+		}
+		System.out.println(s1.hashCode());
+		System.out.println(s2.hashCode());
+		
+		
+	}
+}
+____________________________________________________________________________________________________________________________
+
+//QUE 3//Revision_3) 
+create 4 classes A,B,C,D with member functions Afun(),Bfun(),Cfun() and Dfun() respectively.
+now define "Demo" class with main function. Inside main function create array of Object class which will store instances of above mentioned classes. Traverse through this array and call "Cfun()" of class C only.
+
+
+package exm;
+class A
+{
+	public void Afun()
+	{
+		System.out.println("inside Afun");
+	}
+}
+class B 
+{
+	public void Bfun()
+	{
+		System.out.println("inside Bfun");
+	}
+}
+class C 
+{
+	public void Cfun()
+	{
+		System.out.println("inside Cfun");
+	}
+	
+}
+class D 
+{
+	public void Dfun()
+	{
+		System.out.println("inside Dfun");
+	}
+	
+}
+
+public class Myclass
+{
+	public static void main(String args[])
+	{
+		Object arr[]=new Object[3];
+		arr[0]=new A();
+		arr[1]=new B();
+		arr[2]=new C();
+		
+		for(int i=0;i<arr.length;i++)
+		{
+			if(arr[i] instanceof C)
+			{
+			C obj=(C )arr[i];
+			obj.Cfun();
+			}
+			
+			//System.out.println(arr[i]);
+		}
+		
+		
+		
+	}
+}
+
+
+
+_______________________________________________________________________________________________
+
+//QUE4//create a parent class "Artist" with a member function "void perform()".
+now derive following child classes from "Artist"
+	Actor,Singer and Musician and override "perform" in these classes to write the specific task.
+inside "Actor" class define one more method
+	void changeGateUp()
+	{
+		S.o.p("as per the role demands");
+	}
+
+now create a Demo class with main function.
+inside main function create array of "Artist" with size 3.
+store instances of the above child classes in it.
+Now traverse through the array and invoke "perform" of each child class. In addition to this wherever "Actor" object is there inside the array , also perform "changeGateUp()" method.
+
+
+package exm;
+class Artist
+{
+	public void perform()
+	{
+		System.out.println("inside Artist");
+	}
+	
+}
+class Actor extends Artist
+{
+	public void perform()
+	{
+		System.out.println("inside Actor perform");
+	}
+	public void changeGateup()
+	{
+		System.out.println("inside actor changeGateup");
+	}
+	
+}
+class Singer extends Artist
+{
+	public void perform()
+	{
+		System.out.println("inside Singer perform");
+	}
+	
+	
+}
+class Musician extends Artist
+{
+	public void perform()
+	{
+		System.out.println("inside Musician perform");
+	}
+	
+}
+
+public class Demo
+{
+	public static void main(String args[])
+	{
+		Artist arr[]=new Artist[3];
+		arr[0]=new Actor();
+		arr[1]=new Singer();
+		arr[2]=new Musician();
+		for (int i=0;i<arr.length;i++)
+		{
+			if(arr[i] instanceof Actor)
+			{
+				Actor ref=(Actor)arr[i];
+				ref.changeGateup();
+			}
+			
+			arr[i].perform();
+		}
+		
+	}
+}
+
+____________________________________________________________________________________________________________
+
+//QUE 5//it's a Developer- Client example
+on a Developer side:
+
+create a checked exception "VotingNotAllowedException".
+
+define a class "Person" with a instance member "private String name" and "private int age"
+define parameterized constructor and toString() method also.
+In the parameterized constructor check the age passed while instantiating the class. if the age is less than 18 , constructor should raise "VotingNotAllowedException"
+	[ it should not handle the exception]
+
+	create jar file and documentation 
+
+
+on Client side:
+
+Define a class "Demo" with main function.
+From main function create an object of "Person" and display that object.
+
+--------------------------------------------------------------------------
+developer side:
+
+VotingNotAllowedException.java
+
+package devpack;
+
+
+public class VotingNotAllowedException extends Exception
+{
+	
+	public VotingNotAllowedException(String mess)
+	
+	{
+		super (mess);
+	}
+	
+
+	
+}
+---------------------------------------------------------------------------------------------------------
+Person.java
+
+package devpack;
+
+public class Person 
+{
+	
+	private String name;
+	private int age;
+	
+	public Person(String name,int age)throws VotingNotAllowedException
+	{
+		if(age<18)
+		{
+		   throw new VotingNotAllowedException("you are not eligible for voting");	
+		}
+		
+		
+		this.name=name;
+		this.age=age;
+	}
+	
+	public String toString()
+	{
+		return name + "["+age+"]";
+		
+	}
+	
+
+}
+---------------------------------------------------------------------------------------------
+Client side
+
+Demo.java
+
+
+package clientprog;
+
+import devpack.VotingNotAllowedException;
+import devpack.Person;
+
+public class Demo {
+
+	public static void main(String[] args)
+	
+	{
+		
+		try
+		{
+			Person obj=new Person("jyoti",10);
+			System.out.println(obj);
+		}
+		catch(VotingNotAllowedException ae)
+		{
+			System.out.println(ae);
+		}
+
+	}
+
+}
+______________________________________________________________________________________________________
+
+//QUE 6//write a program to display the method names inside the class which is passed as a command line argument.
+
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+
+public class reflectionapi
+{
+	public static void main(String args[])
+
+	{
+		Class c=null;
+		try{
+			c=Class.forName(args[0]);
+		   }
+		catch(ClassNotFoundException ae)
+		{
+			ae.printStackTrace();
+			
+		}
+		System.out.println("lets display methods");
+		Method method[]=c.getDeclaredMethods();
+		for(int i=0;i<method.length;i++)
+		{
+			System.out.println(method[i]);
+		}
+		System.out.println();
+
+
+
+
+	}
+
+
+}
+____________________________________________________________________________________________________
+
+
+
+
+
+
+
+
+
+
+
+
+
+

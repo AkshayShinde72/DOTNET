@@ -1,0 +1,134 @@
+/*Create class student with private member variable 
+Prn_no, 
+(subjects)
+Java, c#, Html
+Total
+Percentage
+
+Write method public void get_total()
+Write method public void get_percentage()
+Write method public string display() which will display Prn_no total percentage
+Create 2 object of a class and display record
+ */
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace q5
+{
+    class Student
+    {
+        private static int prn_no;
+        private int java;
+        private int cshaff;
+        private int html;
+        int  total;
+        double percentage;
+
+
+        public Student(int java, int cshaff, int html)
+        {
+            prn_no = ++prn_no;
+            this.java = java;
+            this.cshaff = cshaff;
+            this.html = html;
+        }
+
+        public void get_total()
+        {
+            this.total = html + cshaff + java;
+           
+        }
+
+        public void get_percentage()
+        {
+            this.percentage = total * 100 / 300;
+        }
+
+        /*public override string ToString()
+        {
+            return ($"{java}{cshaff}{html}");
+        }*/
+        public string display()
+        {
+            get_total();
+            get_percentage();
+            return ($"{prn_no} percentage= {percentage} total= {total}");
+        }
+
+    }
+
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            Student s1 = new Student(50, 60, 70);
+            Console.WriteLine(s1);
+            Console.WriteLine(s1.display());
+
+            Student b1 = new Student(60, 60, 60);
+            Console.WriteLine(b1.display());
+
+
+
+
+        }
+    }
+}
+
+Q2)
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace day3q1
+{
+    class student
+    {
+        string name;
+        int maths;
+        int sceince;
+        int eng;
+        int total;
+
+
+        public student(string name,int maths,int sceince,int eng)
+        {
+            this.name=name; 
+            this.maths = maths;
+            this.sceince = sceince;    
+            this.eng = eng;
+            
+        }
+
+        public int total_mks()
+        {
+            total = maths + sceince + eng;
+            return total;
+        }
+
+        public void display()
+        {
+
+            Console.WriteLine($"name is ={name} total is={total_mks()}");
+        }
+    }
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            student s = new student("akshay",70,50,80);
+            s.display();
+
+            student B = new student("sushil", 90, 60, 100);
+            B.display();
+
+
+
+        }
+    }

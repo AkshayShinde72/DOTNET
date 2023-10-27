@@ -1,0 +1,45 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net.NetworkInformation;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace pract
+{
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            String s1 = new string(new char[] {'h','i'} );
+            String s2 = new string(new char[] { 'h', 'i' });
+
+            string s3 = "hi";
+            string s4 = "hi";
+
+
+
+
+            Console.WriteLine(object.ReferenceEquals(s1, s2));
+           Console.WriteLine(object.Equals(s1, s2));
+            Console.WriteLine(s1 == s2);
+
+            Console.WriteLine(object.ReferenceEquals(s2, s3));
+            Console.WriteLine(object.Equals(s2, s3));
+            Console.WriteLine(s2 == s3);
+            Console.WriteLine(object.ReferenceEquals(s4, s3));
+            Console.WriteLine(object.Equals(s4, s3));
+            Console.WriteLine(s4 == s3);
+
+            Console.WriteLine(s1.ToString());
+            Console.WriteLine(s2.ToString());
+            Console.WriteLine(s3.ToString());
+            Console.WriteLine(s4.ToString());
+
+            Console.WriteLine(s1.GetHashCode());
+            Console.WriteLine(s2.GetHashCode());
+            Console.WriteLine(s3.GetHashCode());
+            Console.WriteLine(s4.GetHashCode());
+        }
+    }
+}
