@@ -1,0 +1,22 @@
+//1)add and multiply two numbers using Action deligate with anonymous method
+
+using System;
+
+delegate void CountIt(int a,int b);
+
+    class AnonMethDemo2
+{
+    static void Main()
+    {
+
+        Action<int, int> actionTarget = delegate (int x, int y) { Console.WriteLine("Addition is "+(x + y)); };
+        actionTarget += delegate (int x, int y) { Console.WriteLine("Multiplication is " + (x * y)); };
+        actionTarget += delegate (int x, int y) { Console.WriteLine("Division is " + (x / y)); };
+        actionTarget += delegate (int x, int y) { Console.WriteLine("Substraction is " + (x - y)); };
+       
+
+        actionTarget(123,145);
+        Console.WriteLine();
+       
+    }
+}

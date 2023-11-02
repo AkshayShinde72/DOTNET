@@ -1,0 +1,22 @@
+//using Linq 
+
+namespace linqdemo
+{
+    internal class Program
+    {
+       
+        static void Main(string[] args)
+        {
+            int[] numbers = { 5, 8, 3, 4, 5, 9, 4 };
+            var subset = from i in numbers where i < 5 select i;   
+
+            foreach(var i in subset )          
+            {
+                Console.WriteLine("{0} <5",i);
+            }
+
+
+
+        }
+    }
+}

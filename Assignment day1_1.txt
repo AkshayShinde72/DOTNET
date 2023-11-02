@@ -1,0 +1,76 @@
+//1)Create class calculator with two method Add and product. Create object and call method.
+
+using System.ComponentModel;
+
+namespace day1_q1
+{
+    internal class Program
+    {
+        class calculator
+        {
+            public void Add(int x, int y)
+            {
+                int result = x + y;
+                Console.WriteLine(result);
+            }
+            public void product(int x, int y)
+            {
+                int result = x * y;
+                Console.WriteLine(result);
+            }
+        }
+        static void Main(string[] args)
+        {
+            calculator calculator = new calculator();
+            calculator.Add(4, 2);
+            calculator.product(4, 2);
+
+        }
+    }
+}
+
+
+
+//3)Create a class student in namespace DAC and in namespace DBDA write method add in both class. In entry point call both method
+
+using System.ComponentModel;
+
+namespace Dac
+{
+    public class student
+    {
+        public void add(int x,int y)
+        {
+            int result = x + y;
+            Console.WriteLine(result);
+        }    
+    }
+       
+}
+
+namespace Dbda
+{
+  public class student
+    {
+        public void add(int x, int y)
+        {
+            int result = x + y;
+            Console.WriteLine(result);
+        }
+    }
+
+}
+
+namespace day1_1
+{
+    public class Class2
+    { public static void Main(string[] args)
+        {
+            Dac.student s1 = new Dac.student();
+            s1.add(10, 20);
+
+            Dbda.student s2 = new Dbda.student();
+            s2.add(10, 20);
+        }
+    }
+}
