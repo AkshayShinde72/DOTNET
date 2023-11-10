@@ -1,0 +1,14 @@
+D:\C#\assignment\Adodotnet\Assignment_day13\bin\Debug\net7.0\Assignment_day13.exe
+D:\C#\assignment\Adodotnet\Assignment_day13\bin\Debug\net7.0\Assignment_day13.deps.json
+D:\C#\assignment\Adodotnet\Assignment_day13\bin\Debug\net7.0\Assignment_day13.runtimeconfig.json
+D:\C#\assignment\Adodotnet\Assignment_day13\bin\Debug\net7.0\Assignment_day13.dll
+D:\C#\assignment\Adodotnet\Assignment_day13\bin\Debug\net7.0\Assignment_day13.pdb
+D:\C#\assignment\Adodotnet\Assignment_day13\obj\Debug\net7.0\Assignment_day13.GeneratedMSBuildEditorConfig.editorconfig
+D:\C#\assignment\Adodotnet\Assignment_day13\obj\Debug\net7.0\Assignment_day13.AssemblyInfoInputs.cache
+D:\C#\assignment\Adodotnet\Assignment_day13\obj\Debug\net7.0\Assignment_day13.AssemblyInfo.cs
+D:\C#\assignment\Adodotnet\Assignment_day13\obj\Debug\net7.0\Assignment_day13.csproj.CoreCompileInputs.cache
+D:\C#\assignment\Adodotnet\Assignment_day13\obj\Debug\net7.0\Assignment_day13.dll
+D:\C#\assignment\Adodotnet\Assignment_day13\obj\Debug\net7.0\refint\Assignment_day13.dll
+D:\C#\assignment\Adodotnet\Assignment_day13\obj\Debug\net7.0\Assignment_day13.pdb
+D:\C#\assignment\Adodotnet\Assignment_day13\obj\Debug\net7.0\Assignment_day13.genruntimeconfig.cache
+D:\C#\assignment\Adodotnet\Assignment_day13\obj\Debug\net7.0\ref\Assignment_day13.dll
