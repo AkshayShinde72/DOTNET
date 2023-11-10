@@ -1,0 +1,14 @@
+D:\C#\assignment\Adodotnet\Inmemory_crud\obj\Debug\net7.0\Inmemory_crud.GeneratedMSBuildEditorConfig.editorconfig
+D:\C#\assignment\Adodotnet\Inmemory_crud\obj\Debug\net7.0\Inmemory_crud.AssemblyInfoInputs.cache
+D:\C#\assignment\Adodotnet\Inmemory_crud\obj\Debug\net7.0\Inmemory_crud.AssemblyInfo.cs
+D:\C#\assignment\Adodotnet\Inmemory_crud\obj\Debug\net7.0\Inmemory_crud.csproj.CoreCompileInputs.cache
+D:\C#\assignment\Adodotnet\Inmemory_crud\bin\Debug\net7.0\Inmemory_crud.exe
+D:\C#\assignment\Adodotnet\Inmemory_crud\bin\Debug\net7.0\Inmemory_crud.deps.json
+D:\C#\assignment\Adodotnet\Inmemory_crud\bin\Debug\net7.0\Inmemory_crud.runtimeconfig.json
+D:\C#\assignment\Adodotnet\Inmemory_crud\bin\Debug\net7.0\Inmemory_crud.dll
+D:\C#\assignment\Adodotnet\Inmemory_crud\bin\Debug\net7.0\Inmemory_crud.pdb
+D:\C#\assignment\Adodotnet\Inmemory_crud\obj\Debug\net7.0\Inmemory_crud.dll
+D:\C#\assignment\Adodotnet\Inmemory_crud\obj\Debug\net7.0\refint\Inmemory_crud.dll
+D:\C#\assignment\Adodotnet\Inmemory_crud\obj\Debug\net7.0\Inmemory_crud.pdb
+D:\C#\assignment\Adodotnet\Inmemory_crud\obj\Debug\net7.0\Inmemory_crud.genruntimeconfig.cache
+D:\C#\assignment\Adodotnet\Inmemory_crud\obj\Debug\net7.0\ref\Inmemory_crud.dll
