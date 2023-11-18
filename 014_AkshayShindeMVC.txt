@@ -1,0 +1,1138 @@
+********************************************************************************************************************************************************************************************
+Final Practical: ********************************************************************************************************************************************************************************************
+Q1.Create MVC CRUD Application with Entity Core
+
+Controllers:
+HomeController:
+using CRUD.Models;
+using Microsoft.AspNetCore.Mvc;
+
+namespace CRUD.Controllers
+{
+    public class HomeController1 : Controller
+    {
+        private IEmployeeRepository emp;
+        public HomeController1(IEmployeeRepository e)
+        {
+            this.emp = e;
+        }
+        public IActionResult Index()
+        {
+            var e = emp.GetAllEmployee();
+            return View(e);
+        }
+        public ActionResult Details(int id)
+        {
+            var model = emp.GetEmployee(id);
+            return View(model);
+        }
+        public ActionResult Create()
+        {
+            return View();
+        }
+        // POST: EmployeeController/Create
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Create(Employee employee)
+        {
+            try
+            {
+                var model = emp.Add(employee);
+                return RedirectToAction(nameof(Index));
+            }
+            catch
+            {
+                return View();
+            }
+        }
+        public ActionResult Edit(int id)
+        {
+            var model = emp.GetEmployee(id);
+            return View(model);
+        }
+
+        // POST: EmployeeController/Edit/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Edit(int id, Employee emp1)
+        {
+            
+                var model = emp.Update(emp1);
+
+                return RedirectToAction(nameof(Index));
+           
+            
+        }
+        public ActionResult Delete(int id)
+        {
+            var model = emp.GetEmployee(id);
+            return View(model);
+
+        }
+
+        // POST: EmployeeController/Delete/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Delete(int id, IFormCollection collection)
+        {
+            try
+            {
+                var model = emp.Delete(id);
+
+                return RedirectToAction(nameof(Index));
+            }
+            catch
+            {
+                return View();
+            }
+
+
+        }
+    }
+}
+____________________________________________________________________________________________________________________________________________________________________________________________
+
+Models
+
+Appdbcontaxcts:
+
+using Microsoft.EntityFrameworkCore;
+
+namespace CRUD.Models
+{
+    public class Appdbcontaxcts:DbContext
+    {
+        public Appdbcontaxcts(DbContextOptions<Appdbcontaxcts> options):base(options)  {}
+        public DbSet<Employee> Employees { get; set; }
+    }
+}
+____________________________________________________________________________________________________________________________________________________________________________________________
+CustomMiddleWear:
+namespace CRUD.Models
+{
+    public class CustomMiddleWear : IMiddleware
+    {
+        public async Task InvokeAsync(HttpContext context, RequestDelegate next)
+        {
+            await context.Response.WriteAsync("Hello From Cuustom Middlewear");
+            await next(context);
+        }
+    }
+}
+____________________________________________________________________________________________________________________________________________________________________________________________
+Employee:
+namespace CRUD.Models
+{
+    public class Employee
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public string Email { get; set; }
+        public string Department { get; set; }
+    }
+}
+
+____________________________________________________________________________________________________________________________________________________________________________________________
+ErrorViewModel
+namespace CRUD.Models
+{
+    public class ErrorViewModel
+    {
+        public string? RequestId { get; set; }
+
+        public bool ShowRequestId => !string.IsNullOrEmpty(RequestId);
+    }
+}
+____________________________________________________________________________________________________________________________________________________________________________________________
+namespace CRUD.Models
+{
+    public interface IEmployeeRepository
+    {
+        Employee GetEmployee(int Id);
+        IEnumerable<Employee> GetAllEmployee();
+        Employee Add(Employee employee);
+        Employee Update(Employee employeeChanges);
+        Employee Delete(int Id);
+    }
+
+}
+
+____________________________________________________________________________________________________________________________________________________________________________________________
+namespace CRUD.Models
+{
+    public class SQLEmployeeRepository:IEmployeeRepository
+    {
+        private readonly Appdbcontaxcts context;
+
+        public SQLEmployeeRepository(Appdbcontaxcts context)
+        {
+            this.context = context;
+        }
+        public Employee Add(Employee employee)
+        {
+            context.Employees.Add(employee);
+            context.SaveChanges();
+            return employee;
+        }
+
+        public Employee Delete(int Id)
+        {
+            Employee employee = context.Employees.Find(Id);
+            if (employee != null)
+            {
+                context.Employees.Remove(employee);
+                context.SaveChanges();
+            }
+            return employee;
+        }
+
+        public IEnumerable<Employee> GetAllEmployee()
+        {
+            return context.Employees;
+        }
+
+        public Employee GetEmployee(int Id)
+        {
+            return context.Employees.Find(Id);
+        }
+
+        public Employee Update(Employee employeeChanges)
+        {
+            var employee = context.Employees.Attach(employeeChanges);
+            employee.State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+            //context.Update(employee);
+            context.SaveChanges();
+            return employeeChanges;
+        }
+
+
+    }
+}
+
+____________________________________________________________________________________________________________________________________________________________________________________________
+Views:
+Index:
+@model IEnumerable<CRUD.Models.Employee>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Email)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Department)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Email)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Department)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+
+____________________________________________________________________________________________________________________________________________________________________________________________
+Create:
+@model CRUD.Models.Employee
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>Employee</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Email" class="control-label"></label>
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Department" class="control-label"></label>
+                <input asp-for="Department" class="form-control" />
+                <span asp-validation-for="Department" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+
+
+____________________________________________________________________________________________________________________________________________________________________________________________
+update:
+@model CRUD.Models.Employee
+
+@{
+    ViewData["Title"] = "Update";
+}
+
+<h1>Update</h1>
+
+<h4>Employee</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Update">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Email" class="control-label"></label>
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Department" class="control-label"></label>
+                <input asp-for="Department" class="form-control" />
+                <span asp-validation-for="Department" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+
+____________________________________________________________________________________________________________________________________________________________________________________________
+Edit:
+@model CRUD.Models.Employee
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>Employee</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Email" class="control-label"></label>
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Department" class="control-label"></label>
+                <input asp-for="Department" class="form-control" />
+                <span asp-validation-for="Department" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+
+____________________________________________________________________________________________________________________________________________________________________________________________
+Details:
+@model CRUD.Models.Employee
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>Employee</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Email)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Email)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Department)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Department)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>
+
+____________________________________________________________________________________________________________________________________________________________________________________________
+
+Delete:
+@model CRUD.Models.Employee
+
+@{
+    ViewData["Title"] = "Delete";
+}
+
+<h1>Delete</h1>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>Employee</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Email)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Email)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Department)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Department)
+        </dd>
+    </dl>
+    
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="Id" />
+        <input type="submit" value="Delete" class="btn btn-danger" /> |
+        <a asp-action="Index">Back to List</a>
+    </form>
+</div>
+========================================================================================================================================================================================================================================================================================================================================================================================
+Q2. Create MVC Application with following links
+
+namespace WA_Cookiee.Models
+{
+    public class UserLogin
+    {
+        public string Email { get; set; }    
+        public string Password { get; set; }
+        public bool Remember {  get; set; }
+    }
+}
+using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics;
+using System.Net;
+using WA_Cookiee.Models;
+
+namespace WA_Cookiee.Controllers
+{
+    public class HomeController : Controller
+    {
+        private readonly ILogger<HomeController> _logger;
+
+        public HomeController(ILogger<HomeController> logger)
+        {
+            _logger = logger;
+        }
+
+        public IActionResult Index()
+        {
+            return View();
+        }
+        public IActionResult Display()
+        {
+            return View();
+        }
+        public IActionResult Contactus()
+        {
+            return View();
+        }
+        public IActionResult HrData()
+        {
+            if (HttpContext.Session.GetString("Email") != null)
+            {
+                return View(); // Or return whatever action result you need
+            }
+            else
+            {
+                return RedirectToAction("Create", "Sessiondemo");
+            }
+
+            
+            
+
+
+
+        }
+
+
+        public IActionResult Privacy()
+        {
+            return View();
+        }
+
+        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        public IActionResult Error()
+        {
+            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+    }
+}
+____________________________________________________________________________________________________________________________________________________________________________________________
+
+using Microsoft.AspNetCore.Mvc;
+using WA_Cookiee.Models;
+
+
+namespace WA_Cookiee.Controllers
+{
+    public class LoginController : Controller
+    {
+        public ActionResult Index()
+        {
+            var CookieValue = Request.Cookies["Ukey"]?.ToString();
+            ViewBag.CookieValue = CookieValue;
+            return View();
+        }
+
+        public IActionResult Create()
+        {
+            UserLogin obj = null;
+            var CookieValue = Request.Cookies["Ukey"]?.ToString();
+            if (CookieValue != null)
+            {
+                obj = new UserLogin();
+                obj.Email = CookieValue;
+            }
+
+
+            return View(obj);
+        }
+        [HttpPost]
+        public IActionResult Create(UserLogin Userdata)
+        {
+            //ViewBag.Error = "In valid user";
+
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    if (Userdata.Remember == true && Userdata.Email == "training.vita@gmail.com")
+                    {
+                        CookieOptions options = new CookieOptions();
+                        options.Expires = DateTime.Now.AddDays(7);
+                        Response.Cookies.Append("Ukey", Userdata.Email, options);
+                        return RedirectToAction(nameof(Index));
+                    }
+                    else
+                    {
+                        ModelState.AddModelError("Email", "InValid data");
+                        return View();
+                    }
+                }
+
+                else
+                {
+
+                    return View();
+
+                }
+            }
+            catch
+            {
+                return View();
+            }
+        }
+        public ActionResult Lgout()
+        {
+            CookieOptions options = new CookieOptions();
+            options.Expires = DateTime.Now.AddDays(-1);
+            Response.Cookies.Append("Ukey", "", options);
+
+
+            return RedirectToAction(nameof(Index));
+        }
+
+    }
+}
+____________________________________________________________________________________________________________________________________________________________________________________________
+
+using Microsoft.AspNetCore.Mvc;
+using WA_Cookiee.Models;
+
+namespace WA_Cookiee.Controllers
+{
+    public class SessiondemoController : Controller
+    {
+        const string SessionEmail = "Email";
+        const string SessionPassword = "Password";
+
+        public ActionResult Index()
+        {
+            ViewBag.Email = HttpContext.Session.GetString(SessionEmail);
+            ViewBag.Password = HttpContext.Session.GetInt32(SessionEmail);
+            if (ViewBag.Email == null && ViewBag.Password == null)
+
+                return RedirectToAction(nameof(Create));
+
+            return View();
+        }
+
+        public IActionResult Create()
+        {
+
+
+
+            return View();
+        }
+        [HttpPost]
+        public IActionResult Create(UserLogin Userdata)
+        {
+            //ViewBag.Error = "In valid user";
+
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    if (Userdata.Password == "vita" && Userdata.Email == "training.vita@gmail.com")
+                    {
+                        HttpContext.Session.SetString(SessionEmail, Userdata.Email);
+                        HttpContext.Session.SetString(SessionPassword, Userdata.Password);
+
+                        return RedirectToAction(nameof(Index));
+                    }
+                    else
+                    {
+                        ModelState.AddModelError("Email", "InValid data");
+                        return View();
+                    }
+                }
+
+                else
+                {
+
+                    return View();
+
+                }
+            }
+            catch
+            {
+                return View();
+            }
+        }
+        [HttpGet]
+        public ActionResult Logout()
+        {
+            HttpContext.Session.Remove("SessionEmail");
+            HttpContext.Session.Clear();
+            return RedirectToAction("Index", "Home");
+        }
+
+    }
+}
+____________________________________________________________________________________________________________________________________________________________________________________________
+
+namespace WA_Cookiee
+{
+    public class Program
+    {
+        public static void Main(string[] args)
+        {
+            var builder = WebApplication.CreateBuilder(args);
+
+            // Add services to the container.
+            builder.Services.AddControllersWithViews();
+
+            builder.Services.AddSession(options => {
+                options.IdleTimeout = TimeSpan.FromMinutes(1);//You can set Time   
+            });
+
+
+            var app = builder.Build();
+
+            // Configure the HTTP request pipeline.
+            if (!app.Environment.IsDevelopment())
+            {
+                app.UseExceptionHandler("/Home/Error");
+                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+                app.UseHsts();
+            }
+
+            app.UseHttpsRedirection();
+            app.UseStaticFiles();
+
+            app.UseRouting();
+
+            app.UseAuthorization();
+            app.UseSession();
+           
+            app.MapControllerRoute(
+                name: "default",
+                pattern: "{controller=Home}/{action=Index}/{id?}");
+
+            app.Run();
+        }
+    }
+}
+
+========================================================================================================================================================================================================================================================================================================================================================================================
+Q3. Create MVC Application with cookie.
+
+namespace WA_DAY18EXAM.Models
+{
+    public class UserLogin
+    {
+        public string Email {  get; set; }
+        public string Password { get; set; }
+        public bool Remember {  get; set; }
+
+    }
+}
+
+using Microsoft.AspNetCore.Mvc;
+using WA_DAY18EXAM.Models;
+
+namespace WA_DAY18EXAM.Controllers
+{
+    public class LoginController : Controller
+    {
+        public ActionResult Index()
+        {
+            var CookieValue = Request.Cookies["Ukey"]?.ToString();
+            ViewBag.CookieValue = CookieValue;
+            return View();
+        }
+
+        public IActionResult Create()
+        {
+            UserLogin obj = null;
+            var CookieValue = Request.Cookies["Ukey"]?.ToString();
+            if (CookieValue != null)
+            {
+                obj = new UserLogin();
+                obj.Email = CookieValue;
+            }
+
+
+            return View(obj);
+        }
+        [HttpPost]
+        public IActionResult Create(UserLogin Userdata)
+        {
+            //ViewBag.Error = "In valid user";
+
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    if (Userdata.Remember == true && Userdata.Email == "training.vita@gmail.com")
+                    {
+                        CookieOptions options = new CookieOptions();
+                        options.Expires = DateTime.Now.AddDays(7);
+                        Response.Cookies.Append("Ukey", Userdata.Email, options);
+                        return RedirectToAction(nameof(Index));
+                    }
+                    else
+                    {
+                        ModelState.AddModelError("Email", "InValid data");
+                        return View();
+                    }
+                }
+
+                else
+                {
+
+                    return View();
+
+                }
+            }
+            catch
+            {
+                return View();
+            }
+        }
+        public ActionResult Lgout()
+        {
+            CookieOptions options = new CookieOptions();
+            options.Expires = DateTime.Now.AddDays(-1);
+            Response.Cookies.Append("Ukey", "", options);
+
+
+            return RedirectToAction(nameof(Index));
+        }
+    }
+}
+____________________________________________________________________________________________________________________________________________________________________________________________
+
+using Microsoft.AspNetCore.Mvc;
+using WA_DAY18EXAM.Models;
+
+namespace WA_DAY18EXAM.Controllers
+{
+    public class SessiondemoController : Controller
+    {
+        const string SessionEmail = "Email";
+        const string SessionPassword = "Password";
+
+        public ActionResult Index()
+        {
+            ViewBag.Email = HttpContext.Session.GetString(SessionEmail);
+            ViewBag.Password = HttpContext.Session.GetInt32(SessionEmail);
+            if (ViewBag.Email == null && ViewBag.Password == null)
+
+                return RedirectToAction(nameof(Create));
+
+            return View();
+        }
+
+        public IActionResult Create()
+        {
+
+
+
+            return View();
+        }
+        [HttpPost]
+        public IActionResult Create(UserLogin Userdata)
+        {
+            //ViewBag.Error = "In valid user";
+
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    if (Userdata.Password == "vita" && Userdata.Email == "training.vita@gmail.com")
+                    {
+                        HttpContext.Session.SetString(SessionEmail, Userdata.Email);
+                        HttpContext.Session.SetString(SessionPassword, Userdata.Password);
+
+                        return RedirectToAction(nameof(Index));
+                    }
+                    else
+                    {
+                        ModelState.AddModelError("Email", "InValid data");
+                        return View();
+                    }
+                }
+
+                else
+                {
+
+                    return View();
+
+                }
+            }
+            catch
+            {
+                return View();
+            }
+        }
+        [HttpGet]
+        public ActionResult Logout()
+        {
+            HttpContext.Session.Remove("SessionEmail");
+            HttpContext.Session.Clear();
+            return RedirectToAction("Index", "Home");
+        }
+
+    }
+}
+
+____________________________________________________________________________________________________________________________________________________________________________________________
+
+using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics;
+using WA_DAY18EXAM.Models;
+
+namespace WA_DAY18EXAM.Controllers
+{
+    public class HomeController : Controller
+    {
+
+        const string SessionName = "_Name";
+        const string SessionAge = "_Age";
+        public IActionResult Index()
+        {
+            HttpContext.Session.SetString(SessionName, "DAC");
+            HttpContext.Session.SetInt32(SessionAge, 24);
+            return View();
+        }
+        public IActionResult About()
+        {
+            ViewBag.Name = HttpContext.Session.GetString(SessionName);
+            ViewBag.Age = HttpContext.Session.GetInt32(SessionAge);
+            ViewData["Message"] = "Asp.Net Core !!!.";
+
+            return View();
+        }
+
+    }
+}
+____________________________________________________________________________________________________________________________________________________________________________________________
+
+using WA_DAY18EXAM.Models;
+
+namespace WA_DAY18EXAM
+{
+    public class Program
+    {
+
+        public static void Main(string[] args)
+        {
+            var builder = WebApplication.CreateBuilder(args);
+
+            // Add services to the container.
+            builder.Services.AddControllersWithViews();
+            builder.Services.AddScoped<CustomMiddlewareDemo>();
+
+            builder.Services.AddSession(options => {
+                options.IdleTimeout = TimeSpan.FromMinutes(1);//You can set Time   
+            });
+
+
+            var app = builder.Build();
+
+            // Configure the HTTP request pipeline.
+            if (!app.Environment.IsDevelopment())
+            {
+                app.UseExceptionHandler("/Home/Error");
+                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+                app.UseHsts();
+            }
+            
+            app.UseHttpsRedirection();
+            app.UseStaticFiles();
+
+            app.UseRouting();
+
+            app.UseAuthorization();
+            app.UseSession();
+          //  app.UseMiddleware<CustomMiddlewareDemo>();
+            app.MapControllerRoute(
+                name: "default",
+                pattern: "{controller=Home}/{action=Index}/{id?}");
+
+           
+
+            app.Run();
+           
+        }
+    }
+}
+********************************************************************************************************************************************************************************************
+Logic:********************************************************************************************************************************************************************************************
+
+Q.1) Write a program to reverse a string.
+ Where if the input is adam.
+ The output should be mada
+(Do not use any ready-made library function for reversing you can however use std.
+ method /properties for calculating string length.)
+
+
+string s1 = "adam";
+char[] c = s1.ToCharArray();
+string ans = "";
+for (int i = c.Length-1; i >=0; i--)
+{
+    ans += c[i];
+}
+Console.WriteLine(ans);
+========================================================================================================================================================================================================================================================================================================================================================================================
+Q.2) Write a program to count number of words in a sentence, and the number of sentences.
+Where if the input is The dog wags his tail. I think he is happy.
+The output should be: 10 words. 2 sentences.
+
+
+string s = "The dog wags his tail. I think he is happy.";
+string[] ans = s.Split(' ');
+foreach (var item in ans)
+{
+   Console.WriteLine(item);
+}
+Console.WriteLine(ans.Length);
+string[] ans2 = s.Split(".");
+foreach (var item in ans)
+{
+  Console.WriteLine(item);
+}
+Console.WriteLine(ans2.Length-1);
+
+========================================================================================================================================================================================================================================================================================================================================================================================
+Q3)Write a program to generate the following type of output for ‘n’ terms.
+Input is ‘n’, where n is the no. of lines to printed.
+* if n =1
+* * * if n =2
+* * * * * if n =3
+* * * * * * * if n =4
+The example output above is when n=4
+Your program should print the above type of output for any given value of ‘n’.
+
+
+namespace ConsoleApp4
+{
+    internal class Program
+    {
+        
+
+        static void Main(string[] args)
+        {
+            int n = 5; 
+
+            for (int i = 0; i < n; i++)
+            {
+                for (int j = 0; j < n - i - 1; j++)
+                {
+                    Console.Write(" ");
+                }
+
+                for (int k = 0; k <= i; k++)
+                {
+                    Console.Write("* ");
+                }
+
+                Console.WriteLine();
+            }
+
+            Console.ReadLine(); 
+        }
+    }
+
+    
+}
+
+
+========================================================================================================================================================================================================================================================================================================================================================================================
+Q.4) Write a function to display the text value for a given numeric input (up to 6 places).
+Where if input is 123
+The output should be one hundred twenty three
+
+using System;
+
+class Program
+{
+    static void Main()
+    {
+        int input = 123; 
+        string textValue = ConvertToText(input);
+
+        Console.WriteLine($"Text representation of {input}: {textValue}");
+
+        Console.ReadLine(); 
+    }
+
+    static string ConvertToText(int number)
+    {
+        if (number == 0)
+        {
+            return "Zero";
+        }
+
+        string[] units = {  "","One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine" };
+        string[] teens = {"", "Eleven", "Twelve", "Thirteen", "Fourteen", "Fifteen", "Sixteen", "Seventeen", "Eighteen", "Nineteen" };
+        string[] tens = {"",  "Ten", "Twenty", "Thirty", "Forty", "Fifty", "Sixty", "Seventy", "Eighty", "Ninety" };
+
+        string result = "";
+
+        if (number >= 100)
+        {
+            result += units[number / 100] + " Hundred ";
+            number %= 100;
+        }
+
+        if (number >= 20)
+        {
+            result += tens[number / 10] + " ";
+            number %= 10;
+        }
+        else if (number >= 11)
+        {
+            result += teens[number - 10] + " ";
+            number = 0; 
+        }
+
+        if (number > 0)
+        {
+            result += units[number];
+        }
+
+        return result;
+    }
+}
+
+========================================================================================================================================================================================================================================================================================================================================================================================
